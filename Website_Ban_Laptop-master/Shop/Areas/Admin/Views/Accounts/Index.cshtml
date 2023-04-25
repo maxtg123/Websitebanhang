@@ -1,0 +1,181 @@
+﻿@model IEnumerable<Shop.Models.Account>
+
+@{
+    ViewData["Title"] = "Danh sách tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.ShowMessage != null)
+{
+    <div class="row">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <div id="alertMess" class="alert alert-danger alert-dismissible fade show" role="alert">
+                @ViewBag.ShowMessage
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    ViewBag.ShowMessage = null;
+    TempData["Result"] = null;
+}
+
+<p>
+    <a asp-action="Create" role="button" class="btn btn-success btn-rounded waves-effect waves-light"><i class="fas fa-plus pr-2"></i>Thêm</a>
+</p>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <h2 class="card-title"><b>Danh sách tài khoản</b></h2>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Avatar)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Username)
+                            </th>
+                            <th>
+                                Loại tài khoản
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FullName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Phone)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Address)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="width: 160px;">
+                                    <img style="width: 100px;" src="~/admin/assets/images/account/@item.Avatar" alt="image" />
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Username)
+                                </td>
+                                <td>
+                                    @if (item.IsAdmin == true)
+                                    {
+                                        <b class="btn btn-outline-info btn-fw" style="width:120;">
+                                            Admin
+                                        </b>
+                                    }
+                                    else
+                                    {
+                                        <b class="btn btn-outline-danger btn-fw" style="width:120;">
+                                            Người dùng
+                                        </b>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Phone)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Address)
+                                </td>
+                                <td style="width: 100px;">
+                                    <button type="button" data-toggle="modal" data-target="#exampleModal" data-whatever="@item.Id" class="btn btn-danger btn-rounded waves-effect waves-light"><i class="fas fa-trash pr-2"></i>Xoá</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" style="text-align: center;">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Delete">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" hidden class="form-control" name="id" id="invoiceId">
+                    </div>
+                    <div class="form-group">
+                        <label for="ShipperName" class="col-form-label">Bạn có chắc chắn muốn xoá tài khoản?</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Huỷ</button>
+                    <button type="submit" class="btn btn-primary">Xoá</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Script {
+
+    <script>
+        setTimeout(() => {
+            $('#alertMess').fadeOut('slow');
+        }, 1000);
+    </script>
+
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false//,
+                //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
+
+
+    <script>
+        $('#exampleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var invoiceId = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+            modal.find('.modal-title').text('Thông báo')
+            modal.find('.modal-body #invoiceId').val(invoiceId)
+        })
+    </script>
+}

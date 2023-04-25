@@ -1,0 +1,234 @@
+﻿@model Shop.Models.Account
+
+
+@{
+    ViewData["Title"] = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = ViewBag.UserLogin;
+}
+
+<div class="my-account-wrapper pt-50 pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- My Account Page Start -->
+                <div class="myaccount-page-wrapper">
+                    <!-- My Account Tab Menu Start -->
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4">
+                            <div class="myaccount-tab-menu nav" role="tablist">
+                                <a href="#orders" class="active" data-toggle="tab">
+                                    <i class="fa fa-dashboard"></i>
+                                    Thông tin đơn hàng
+                                </a>
+                                <a href="#account-info" data-toggle="tab"><i class="fa fa-user"></i> Thông tin tài khoản</a>
+                                <a asp-controller="Login" asp-action="Logout"><i class="fa fa-sign-out"></i> Đăng xuất</a>
+                            </div>
+                        </div>
+                        <!-- My Account Tab Menu End -->
+                        <!-- My Account Tab Content Start -->
+                        <div class="col-lg-9 col-md-8">
+                            <div class="tab-content" id="myaccountContent">
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade show active" id="orders" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <div class="myaccount-table table-responsive text-center">
+                                            <table class="table table-bordered">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Mã hoá đơn</th>
+                                                        <th>Người nhận</th>
+                                                        <th>SDT người nhận</th>
+                                                        <th>Địa chỉ</th>
+                                                        <th>Trạng thái đơn hàng</th>
+                                                        <th>Tổng tiền</th>
+                                                        <th>Phương thức thanh toán</th>
+                                                        <th>Người giao</th>
+                                                        <th>SDT người giao</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @if (ViewBag.LstInvoice != null)
+                                                    {
+                                                        foreach (var item in ViewBag.LstInvoice)
+                                                        {
+                                                    <tr>
+                                                        <td><a style="color: blue;" asp-action="InvoiceDetail" asp-route-code="@item.Code">@item.Code</a></td>
+                                                        <td>@item.ShippingName</td>
+                                                        <td>@item.ShippingPhone</td>
+                                                        <td>@item.ShippingAddress</td>
+                                                        <td>
+                                                            @if (item.OrderStatusId == 1)
+                                                            {
+                                                                <b class="btn btn-outline-danger btn-fw" style="width:120;">
+                                                                    @item.OrderStatus.StatusName
+                                                                </b>
+                                                            }
+                                                            else if (item.OrderStatusId == 2)
+                                                            {
+                                                                <b class="btn btn-outline-primary btn-fw" style="width: 120;">@item.OrderStatus.StatusName</b>
+                                                            }
+                                                            else if (item.OrderStatusId == 3)
+                                                            {
+                                                                <b class="btn btn-outline-info btn-fw" style="width: 120;">@item.OrderStatus.StatusName</b>
+                                                            }
+                                                            else if (item.OrderStatusId == 4)
+                                                            {
+                                                                <b class="btn btn-outline-warning btn-fw" style="width: 120;">@item.OrderStatus.StatusName</b>
+                                                            }
+                                                            else if (item.OrderStatusId == 5)
+                                                            {
+                                                                <b class="btn btn-outline-success btn-fw" style="width: 120;">@item.OrderStatus.StatusName</b>
+                                                            }
+                                                            else if (item.OrderStatusId == 6)
+                                                            {
+                                                                <b class="btn btn-outline-danger btn-fw" style="width: 120;">@item.OrderStatus.StatusName</b>
+                                                            }
+                                                        </td>
+                                                        <td style="color: red;">@item.TotalDisplay</td>
+                                                        <td>@(item.PaymentMethod == true ? "Thanh toán online" : "Thanh toán khi nhận hàng")</td>
+                                                        <td>@item.ShipperName</td>
+                                                        <td>@item.ShipperPhone</td>
+                                                        <td>
+                                                            @if (item.OrderStatusId == 1 && item.PaymentMethod == false)
+                                                            {
+                                                                <a asp-action="CencalInvoice" asp-route-id="@item.Id" role="button" class="btn btn-danger btn-rounded waves-effect waves-light"><i class="fas fa-eye pr-2"></i>Huỷ</a>
+                                                            }
+                                                        </td>
+                                                    </tr>
+
+                                                        }
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Single Tab Content End -->
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade" id="account-info" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <div class="account-details-form">
+                                            <form asp-controller="Accounts" method="post" asp-action="Edit" enctype="multipart/form-data">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <input hidden asp-for="Id" />
+                                                            <input asp-for="Password" hidden />
+                                                            <input asp-for="IsAdmin" hidden />
+                                                            <input hidden asp-for="Username"/>
+                                                            <input hidden asp-for="Status"/>
+                                                            @*<label asp-for="AvatarFile" class="control-label"></label>*@
+                                                            <img id="imgPreview" style=" width: 120px; margin: 2% 43% 3%; border-radius: 50%;" src="~/admin/assets/images/Account/@user.Avatar" />
+                                                            <input style="cursor: pointer; border: 1px solid #cccccc; border-radius: 5px; padding: 5px 15px; margin: 5px; background: #dddddd; display: inline-block; background: #5cbd95; width: 96px; margin-left: 45%;" asp-for="AvatarFile" class="form-control" />
+                                                            <input type="hidden" asp-for="Avatar" />
+                                                            <span asp-validation-for="Avatar" class="text-danger"></span>
+                                                            @*<div class="form-group">
+            <label asp-for="AvatarFile" class="control-label"></label>
+            <input asp-for="AvatarFile" class="form-control" />
+            <input type="hidden" asp-for="Avatar" />
+            <img id="imgPreview" style="width: 120px; margin: 2% 20% 0;" src="~/admin/assets/images/Account/@user.Avatar" />
+            <span asp-validation-for="AvatarFile" class="text-danger"></span>
+        </div>*@
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="Username" class="control-label"></label>
+                                                            <input asp-for="Username" disabled class="form-control" style="background: grey;" />
+                                                            <span asp-validation-for="Username" class="text-danger"></span>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="FullName" class="control-label"></label>
+                                                            <input asp-for="FullName" class="form-control" />
+                                                            <span asp-validation-for="FullName" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="Phone" class="control-label"></label>
+                                                            <input asp-for="Phone" class="form-control" />
+                                                            <span asp-validation-for="Phone" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="Address" class="control-label"></label>
+                                                            <input asp-for="Address" class="form-control" />
+                                                            <span asp-validation-for="Address" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="Email" class="control-label"></label>
+                                                            <input asp-for="Email" class="form-control" />
+                                                            <span asp-validation-for="Email" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @*<fieldset>
+                                                        <legend>Thay đổi mật khẩu</legend>
+                                                        <div class="single-input-item">
+                                                            <label for="current-pwd" class="required">Mật khẩu cũ</label>
+                                                            <input type="password" id="current-pwd">
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="single-input-item">
+                                                                    <label for="new-pwd" class="required">Mật khẩu mới</label>
+                                                                    <input type="password" id="new-pwd">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="single-input-item">
+                                                                    <label for="confirm-pwd" class="required">Xác nhận mật khẩu</label>
+                                                                    <input type="password" id="confirm-pwd">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>*@
+                                                <div class="single-input-item">
+                                                    <button class="check-btn sqr-btn ">Lưu</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div> <!-- Single Tab Content End -->
+                            </div>
+                        </div> <!-- My Account Tab Content End -->
+                    </div>
+                </div> <!-- My Account Page End -->
+            </div>
+        </div>
+    </div>
+</div>
+@section Script {
+    <script>
+        $(document).ready(function () {
+            $("#AvatarFile").on("change", function (e) {
+                var filePath = URL.createObjectURL(e.target.files[0]);
+                $("#imgPreview").show().attr("src", filePath);
+            })
+        });
+
+    </script>
+
+    
+}

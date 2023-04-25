@@ -1,0 +1,150 @@
+﻿@model Shop.Models.Invoice
+
+@{
+    ViewData["Title"] = "Thanh toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var account = ViewBag.UserLogin;
+    var fullName = account.FullName;
+    var phone = account.Phone;
+    var address = account.Address;
+}
+@if (ViewBag.ResultUI != null)
+{
+    <div class="row">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <div id="alertMess" class="alert alert-danger alert-dismissible fade show" role="alert">
+                @ViewBag.ResultUI
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    TempData["ResultUI"] = null;
+}
+@section Scripts {
+    <script>
+    setTimeout(() => {
+	$('#alertMess').fadeOut('slow');
+}, 2000);
+    </script>
+}
+<div class="checkout-main-area pt-42 pb-120">
+    <div class="container">
+        <div class="checkout-wrap pt-30">
+            <form asp-action="Create" method="post">
+                <div class="row">
+                    @if (ViewBag.UserLogin != null)
+                    {
+                        <div class="col-lg-7">
+                            <div class="billing-info-wrap mr-50">
+                                <h3>Thông tin hoá đơn</h3>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-6">
+                                        <div class="billing-info mb-20">
+                                            <label asp-for="ShippingName"></label>
+                                            <input asp-for="ShippingName" value="@fullName">
+                                            <span asp-validation-for="ShippingName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="billing-info mb-20">
+                                            <label asp-for="ShippingAddress"></label>
+                                            <input asp-for="ShippingAddress" value="@address">
+                                            <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="billing-info mb-20">
+                                            <label asp-for="ShippingPhone"></label>
+                                            <input asp-for="ShippingPhone" value="@phone">
+                                            <span asp-validation-for="ShippingPhone" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="additional-info-wrap">
+                                    <label asp-for="Notes"></label>
+                                    <textarea asp-for="Notes" name="Notes"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    <div class="col-lg-5">
+                        <div class="your-order-area">
+                            <h3>Chi tiết đơn hàng</h3>
+                            <div class="your-order-wrap gray-bg-4">
+                                <div class="your-order-info-wrap">
+                                    <div class="your-order-info">
+                                        <ul>
+                                            <li>Sản phẩm <span>Đơn giá</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="your-order-middle">
+                                        <ul>
+                                            @if (ViewBag.lstCart != null)
+                                            {
+                                                foreach (var item in ViewBag.lstCart)
+                                                {
+                                                    <li>
+                                                        <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; ">@item.Product.Name</p>
+                                                        X @item.Quantity
+                                                        <span>@item.Product.PriceDisplay ₫</span>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="your-order-info order-subtotal">
+                                        <ul>
+                                            <li>Tạm tính <span>@ViewBag.SubTotal ₫</span></li>
+                                        </ul>
+                                    </div>
+                                    @if (ViewBag.TransportFree != null)
+                                    {
+                                        <div class="your-order-info order-shipping">
+                                            <ul>
+                                                <li>
+                                                    Phí vận chuyển <p>@ViewBag.TransportFree ₫</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    }
+                                    <div class="your-order-info order-total">
+                                        <ul>
+                                            <input asp-for="Total" type="text" hidden value="@ViewBag.TotalInsert" />
+                                            <li>Thành tiền <span>@ViewBag.Total ₫</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="payment-method">
+                                    <div class="pay-top sin-payment">
+                                        <input id="payment_method_1" class="input-radio" type="radio" value="0" checked="checked" name="payment_method">
+                                        <label for="payment_method_1"> Thanh toán khi nhận hàng</label>
+                                    </div>
+                                    <div class="pay-top sin-payment sin-payment-3">
+                                        <input id="payment-method-4" class="input-radio" type="radio" value="1" name="payment_method">
+                                        <label for="payment-method-4">Thanh toán qua <img style="height: 26px;" alt="" src="~/admin/pay.png"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="Place-order">
+                                <button class="btn btn-primary" type="submit" style="
+                                                                        min-width: 100%;
+                                                                        text-align: center;
+                                                                        font-size: 130%;
+                                                                        height: 50px;
+                                                                        font-weight: 500;
+                                                                    ">
+                                    Đặt hàng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,177 @@
+﻿@model Shop.Models.Account
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="my-account-wrapper pt-50 pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- My Account Page Start -->
+                <div class="myaccount-page-wrapper">
+                    <!-- My Account Tab Menu Start -->
+                    <div class="row">
+                        @*<div class="col-lg-3 col-md-4">
+                            <div class="myaccount-tab-menu nav" role="tablist">
+                                <a href="#orders" class="active" data-toggle="tab">
+                                    <i class="fa fa-dashboard"></i>
+                                    Chi tiết đơn hàng
+                                </a>
+                                <a href="#account-info" data-toggle="tab"><i class="fa fa-user"></i> Thông tin tài khoản</a>
+                                <a asp-controller="Login" asp-action="Logout"><i class="fa fa-sign-out"></i> Đăng xuất</a>
+                            </div>
+                        </div>*@
+                        <!-- My Account Tab Menu End -->
+                        <!-- My Account Tab Content Start -->
+                        <div class="col-lg-12 col-md-12">
+                            <div class="tab-content" id="myaccountContent">
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade show active" id="orders" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <div class="myaccount-table table-responsive text-center">
+                                            <table class="table table-bordered">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Tên sản phẩm</th>
+                                                        <th>Hình ảnh</th>
+                                                        <th>Số lượng</th>
+                                                        <th>Đơn giá</th>
+                                                        <th>Thành tiền</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @if (ViewBag.LstInvoiceDetail != null)
+                                                    {
+                                                        foreach (var item in ViewBag.LstInvoiceDetail)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; "><a asp-controller="Products" asp-action="Product_Detail" asp-route-id="@item.Product.Id">@item.Product.Name</a></p> 
+                                                                </td>
+                                                                <td>
+                                                                    <img style="width: 100px;" src="~/admin/assets/images/products/@item.Product.Image" alt="image" />
+                                                                </td>
+                                                                <td>
+                                                                    @item.Quantity
+                                                                </td>
+                                                                <td>
+                                                                    @item.UnitPriceDisplay
+                                                                </td>
+                                                                <td>
+                                                                    @item.IntoMoney
+                                                                </td>
+                                                            </tr>
+                                                            
+
+
+                                                        }
+                                                    }
+                                                    <tr style="font-size: 150%; color: red;">
+                                                        <td colspan="4" style=" text-align: right;">Tổng cộng:</td>
+                                                        <td>@ViewBag.TotalInvoice</td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Single Tab Content End -->
+                                <!-- Single Tab Content Start -->
+                                <div class="tab-pane fade" id="account-info" role="tabpanel">
+                                    <div class="myaccount-content">
+                                        <div class="account-details-form">
+                                            <form action="#">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="Avatar" class="control-label"></label>
+                                                            <input asp-for="Avatar" class="form-control" />
+                                                            <span asp-validation-for="Avatar" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="Username" class="control-label"></label>
+                                                            <input asp-for="Username" disabled class="form-control" />
+                                                            <span asp-validation-for="Username" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="FullName" class="control-label"></label>
+                                                            <input asp-for="FullName" class="form-control" />
+                                                            <span asp-validation-for="FullName" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="Phone" class="control-label"></label>
+                                                            <input asp-for="Phone" class="form-control" />
+                                                            <span asp-validation-for="Phone" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="Address" class="control-label"></label>
+                                                            <input asp-for="Address" class="form-control" />
+                                                            <span asp-validation-for="Address" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="single-input-item">
+                                                            <label asp-for="Email" class="control-label"></label>
+                                                            <input asp-for="Email" class="form-control" />
+                                                            <span asp-validation-for="Email" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @*<fieldset>
+                                                        <legend>Thay đổi mật khẩu</legend>
+                                                        <div class="single-input-item">
+                                                            <label for="current-pwd" class="required">Mật khẩu cũ</label>
+                                                            <input type="password" id="current-pwd">
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="single-input-item">
+                                                                    <label for="new-pwd" class="required">Mật khẩu mới</label>
+                                                                    <input type="password" id="new-pwd">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="single-input-item">
+                                                                    <label for="confirm-pwd" class="required">Xác nhận mật khẩu</label>
+                                                                    <input type="password" id="confirm-pwd">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>*@
+                                                <div class="single-input-item">
+                                                    <button class="check-btn sqr-btn ">Lưu</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div> <!-- Single Tab Content End -->
+                            </div>
+                        </div> <!-- My Account Tab Content End -->
+                    </div>
+                </div> <!-- My Account Page End -->
+            </div>
+        </div>
+    </div>
+</div>

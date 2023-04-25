@@ -1,0 +1,125 @@
+﻿@model IEnumerable<Shop.Models.Warehouse>
+
+@{
+    ViewData["Title"] = "Danh sách nhập kho";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.ShowMessage != null)
+{
+    <div class="row">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <div id="alertMess" class="alert alert-success alert-dismissible fade show" role="alert">
+                @ViewBag.ShowMessage
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    TempData["Result"] = null;
+}
+
+<p>
+    <a asp-action="Create" role="button" class="btn btn-success btn-rounded waves-effect waves-light"><i class="fas fa-plus pr-2"></i>Nhập sản phẩm đã có</a>
+    @*<a asp-action="CreateNew" role="button" class="btn btn-success btn-rounded waves-effect waves-light"><i class="fas fa-plus pr-2"></i>Nhập sản phẩm mới</a>*@
+
+</p>
+
+<div class="row">
+    <div class="col-12">
+        <!-- /.card -->
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <h2 class="card-title"><b>Danh sách sản phẩm nhập kho</b></h2>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped" style="text-align:center;">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Products[0].Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Products[0].Image)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Quantity)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Price)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IssuedDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TotalDisplay)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+                            <td style="width: 160px;">
+                                <img style="width: 150px;" src="~/admin/assets/images/products/@item.ProductImage" alt="image" />
+                            </td>
+                            <td style="width: 100px;">
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td style="width: 100px;">
+                                @Html.DisplayFor(modelItem => item.PriceDisplay)
+                            </td>
+                            <td style="width: 100px;">
+                                @Html.DisplayFor(modelItem => item.IssuedDate)
+                            </td>
+                            <td style="width: 100px;">
+                                @Html.DisplayFor(modelItem => item.TotalDisplay)
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
+            
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+
+@section Script {
+    <script>
+        setTimeout(() => {
+            $('#alertMess').fadeOut('slow');
+        }, 2000);
+    </script>
+
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": true, "autoWidth": false//,
+                //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
+
+}

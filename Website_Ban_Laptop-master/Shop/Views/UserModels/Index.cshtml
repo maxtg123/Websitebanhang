@@ -1,0 +1,275 @@
+﻿@*@model Shop.Models.UserModel*@
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Index";
+}
+@*<a asp-area="Default" asp-controller="Login" asp-action="LoginWithGoogle" >Login</a>
+<ul>
+     <li>
+            <a>Session Content: @ViewBag.DemoSession</a>
+        </li>
+    @if(Context.User.Identity.IsAuthenticated)
+    {
+        <li>
+            <img src="@ViewBag.Picture" >
+            
+        </li>
+        <li>
+            <a>Xin chào @User.Identity.Name</a>
+        </li>
+        <li>
+            <a asp-area="Default"  asp-controller="Login" asp-action="Logout">Logout</a>
+        </li>
+    }
+</ul>
+<form method="post" asp-area="" asp-controller="Login" asp-action="Login">
+    <div class="form-group">
+        <label asp-for="UserName" class="control-label"></label>
+        <input asp-for="UserName" id="txtUserNameLogin" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Password" class="control-label"></label>
+        <input  asp-for="Password" id="txtPasswordLogin" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit"  value="Login" id="btnLogin" class="btn btn-primary" />
+    </div>  
+</form>
+
+<div class="row">
+    <div class="col-md-4">        
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" id="txtUserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" id="txtPassword" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmailAddress" class="control-label"></label>
+                <input asp-for="EmailAddress" id="txtEmailAddress" class="form-control" />
+                <span asp-validation-for="EmailAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Role" class="control-label"></label>
+                <input asp-for="Role"  id="txtRole"class="form-control" />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SurName" class="control-label"></label>
+                <input asp-for="SurName" id="txtSurName" class="form-control" />
+                <span asp-validation-for="SurName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GiveName" class="control-label"></label>
+                <input asp-for="GiveName" id="txtGiveName" class="form-control" />
+                <span asp-validation-for="GiveName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit"  value="Create" id="btnCreate" class="btn btn-primary" />
+                <input type="submit"  value="Save" id="btnSave"  class="btn btn-secondary" />
+            </div>      
+    </div>
+</div>
+<table id="tblUser" class="table table-sm table-striped table-bordered m-2">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>UserName</th>
+            <th>Password</th>
+            <th>EmailAddress</th>
+            <th>Role</th>
+            <th>SurName</th>
+            <th>GiveName</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>*@
+
+@section Scripts {
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
+    @*<script>
+
+        $('#btnLogin').click(function () {
+            //var us = $('#txtUserNameLogin').val();
+            //var pass = $('#txtPasswordLogin').val();
+            alert($('#txtUserNameLogin').val());
+            var user = {
+                UserName: $('#txtUserNameLogin').val(),
+                Password: $('#txtPasswordLogin').val()
+            };
+             $.ajax({
+                 method: "POST",
+                 url: "/login/LoginWithSystem/",
+                 data: {userLogin: user}
+                 
+             }).done(function (msg) {
+                 alert(msg);                 
+                 location.reload();
+             });
+        });
+
+        // Status = true là create
+        // Status = false là Update
+        var status = true;
+        $(document).ready(function() {            
+            $.getJSON("/usermodels/getalluser", function (users) {                
+                $('#tblUser tbody tr').remove();
+                $.map(users, function(user) {
+                    $('#tblUser tbody').append( "<tr>"
+                        + " <td>" + user.id + "</td>"
+                        + " <td>" + user.userName + "</td>"
+                        + " <td>" + user.password + "</td>"
+                        + " <td>" + user.emailAddress + "</td>"
+                        + " <td>" + user.role + "</td>"
+                        + " <td>" + user.surName + "</td>"
+                        + " <td>" + user.giveName + "</td>"
+                        + " <td>" 
+                        + "      <button class='btn btn-success' onclick='Edit("+ user.id + ")' style='margin-right: 5px;'> Edit</button>" 
+                        + "      <button class='btn btn-danger' onclick='Delete("+ user.id + ")' > Delete</button>" 
+                        + "</td>"
+                        + "</tr>");
+                });
+            });           
+         });
+
+         function Edit(id) {
+             if(id > 0) {     
+                 $.getJSON("/usermodels/GetById/"+id, function(user) {                     
+                     $('#txtUserName').val(user.userName);
+                     $('#txtPassword').val(user.password);
+                     $('#txtEmailAddress').val(user.emailAddress);
+                     $('#txtRole').val(user.role);
+                     $('#txtSurName').val(user.surName);
+                     $('#txtGiveName').val(user.giveName);
+                 });
+
+                 $('#btnSave').attr("class","btn btn-success");                 
+             }
+         }
+
+         function Delete(id) {
+             if(id > 0) {
+                 $.ajax({
+                     method: "DELETE",
+                     url: "usermodels/delete/"+id,
+                 }).done(function (msg) {
+                     alert(msg);
+                     location.reload();
+                 });
+             }
+         }
+
+         
+
+          $('#btnCreate').click(function () {
+             var user = {
+                 UserName: $('#txtUserName').val(),
+                 Password: $('#txtPassword').val(),
+                 EmailAddress: $('#txtEmailAddress').val(),
+                 Role: $('#txtRole').val(),
+                 SurName: $('#txtSurName').val(),
+                 GiveName: $('#txtGiveName').val()
+             };
+             status = true;
+             $.ajax({
+                 method: "POST",
+                 url: "usermodels/AddUpdateUser/",
+                 data: {user: user, status: status}
+             }).done(function (msg) {
+                 alert(msg);                 
+                 location.reload();
+             });
+         });
+
+         $('#btnSave').click(function () {
+             var user = {
+                 UserName: $('#txtUserName').val(),
+                 Password: $('#txtPassword').val(),
+                 EmailAddress: $('#txtEmailAddress').val(),
+                 Role: $('#txtRole').val(),
+                 SurName: $('#txtSurName').val(),
+                 GiveName: $('#txtGiveName').val()
+             };
+             status = false;
+             $.ajax({
+                 method: "POST",
+                 url: "usermodels/AddUpdateUser/",
+                 data: {user: user, status: status}
+             }).done(function (msg) {
+                 alert(msg);                 
+                 location.reload();
+             });
+         });
+        
+
+    </script>*@
+}
+
+
+@*<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SurName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GiveName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GiveName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>*@

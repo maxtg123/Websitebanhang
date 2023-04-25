@@ -1,0 +1,40 @@
+﻿@model Shop.Models.Product
+
+@{
+    ViewData["Title"] = "Nhập kho sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Nhập kho sản phẩm</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateInStock">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input disabled asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label> <br />
+                <img id="imgPreview" style="width: 120px; margin: 2% 20% 0;" src="~/admin/assets/images/products/@Model.Image" />
+            </div>
+            <div class="form-group">
+                <label asp-for="QuantityImport" class="control-label"></label>
+                <input asp-for="QuantityImport" min="1" value="1" class="form-control" />
+                <span asp-validation-for="QuantityImport" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PriceImport" class="control-label"></label>
+                <input asp-for="PriceImport" class="form-control" />
+                <span asp-validation-for="PriceImport" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Lưu" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+

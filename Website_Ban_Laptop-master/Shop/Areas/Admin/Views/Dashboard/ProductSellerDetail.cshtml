@@ -1,0 +1,225 @@
+﻿@model IEnumerable<Shop.Models.Invoice>
+
+@{
+    ViewData["Title"] = "Đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@if (ViewBag.ShowMessage != null)
+{
+    <div class="row">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <div id="alertMess" class="alert alert-success alert-dismissible fade show" role="alert">
+                @ViewBag.ShowMessage
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    TempData["Result"] = null;
+}
+
+<form asp-action="Index" method="get">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            @if (ViewBag.LoaiSanPhamId != null)
+            {
+
+                <select name="LoaiSanPhamId" onchange="this.form.submit()" asp-items="ViewBag.LoaiSanPhamId" class="form-control">
+                </select>
+            }
+        </div>
+        <div class="form-group col-md-4">
+
+        </div>
+        <div class="form-group col-md-2">
+        </div>
+
+    </div>
+
+</form>
+<div class="row">
+    <div class="col-12">
+        <!-- /.card -->
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <h2 class="card-title">Danh sách đơn hàng có sản phẩm<b>@ViewBag.TitleProductSellserDetail</b></h2>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Code)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ShippingName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ShippingAddress)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ShippingPhone)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Notes)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Total)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OrderStatusId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ShipperName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ShipperPhone)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.lstInvoice)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-controller="Invoices" asp-action="InvoiceDetail" asp-route-id="@item.Id">@item.Code</a>
+                                </td>
+                                <td>
+                                    @item.ShippingName
+                                </td>
+                                <td>
+                                    @item.ShippingAddress
+                                </td>
+                                <td>
+                                    @item.ShippingPhone
+                                </td>
+                                <td>
+                                    @item.Notes
+                                </td>
+                                <td>
+                                    @item.TotalDisplay
+                                </td>
+                                <td>
+                                    @if (item.OrderStatusId == 1)
+                                    {
+                                        <b class="btn btn-outline-danger btn-fw" style="width:120;">
+                                            @item.OrderStatus.StatusName
+                                        </b>
+                                    }
+                                    else if (item.OrderStatusId == 2)
+                                    {
+                                        <b class="btn btn-outline-primary btn-fw" style="width: 120;">@item.OrderStatus.StatusName</b>
+                                    }
+                                    else if (item.OrderStatusId == 3)
+                                    {
+                                        <b class="btn btn-outline-info btn-fw" style="width: 120;">@item.OrderStatus.StatusName</b>
+                                    }
+                                    else if (item.OrderStatusId == 4)
+                                    {
+                                        <b class="btn btn-outline-warning btn-fw" style="width: 120;">@item.OrderStatus.StatusName</b>
+                                    }
+                                    else if (item.OrderStatusId == 5)
+                                    {
+                                        <b class="btn btn-outline-success btn-fw" style="width: 120;">@item.OrderStatus.StatusName</b>
+                                    }
+                                    else if (item.OrderStatusId == 6)
+                                    {
+                                        <b class="btn btn-outline-danger btn-fw" style="width: 120;">@item.OrderStatus.StatusName</b>
+                                    }
+
+                                </td>
+                                <td>
+                                    @item.ShipperName
+                                </td>
+                                <td>
+                                    @item.ShipperPhone
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thông tin người giao hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="UpdateShipper" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" hidden class="form-control" name="id" id="invoiceId">
+                    </div>
+                    <div class="form-group">
+                        <label for="ShipperName" class="col-form-label">Tên người giao hàng</label>
+                        <input required type="text" class="form-control" name="ShipperName">
+                    </div>
+                    <div class="form-group">
+                        <label for="ShipperPhone" class="col-form-label">SDT người giao hàng</label>
+                        <input required type="text" class="form-control" name="ShipperPhone">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Script {
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": true, "autoWidth": false//,
+                //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
+
+    <script>
+        setTimeout(() => {
+            $('#alertMess').fadeOut('slow');
+        }, 2000);
+    </script>
+
+    <script>
+    $('#exampleModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var invoiceId = button.data('whatever') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        modal.find('.modal-title').text('Thông tin người giao hàng')
+        modal.find('.modal-body #invoiceId').val(invoiceId)
+    })
+    </script>
+}

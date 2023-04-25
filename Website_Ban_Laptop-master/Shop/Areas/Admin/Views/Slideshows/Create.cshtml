@@ -1,0 +1,52 @@
+﻿@model Shop.Models.Slideshow
+
+@{
+    ViewData["Title"] = "Thêm slideshow";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<h4>Thông tin Slideshow</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <input asp-for="Content" class="form-control" />
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Link" class="control-label"></label>
+                <input asp-for="Link" class="form-control" />
+                <span asp-validation-for="Link" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" />
+                <input asp-for="Image" value="image.png" type="hidden" class="form-control" />
+                <img id="imgPreview" style="width: 200px; display:none;" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Lưu" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Script {
+    <script>
+    $(document).ready(function () {
+        $("#ImageFile").on("change", function (e) {
+            var filePath = URL.createObjectURL(e.target.files[0]);
+            $("#imgPreview").show().attr("src",filePath);
+        })
+    });
+    </script>
+}
